@@ -23,10 +23,12 @@ const userSchema = new Schema<User>({
     username : {
         type : Schema.Types.String,
         required : true,
+        unique : true,
     },
     email : {
         type : Schema.Types.String,
         required : true,
+        unique : true
     },
     password : {
         type : Schema.Types.String,
@@ -55,12 +57,22 @@ const userSchema = new Schema<User>({
 
 userSchema.pre("save", function (next) {
     const user = this
-
+    
     user.password = encrypt(user.password)
-
+    
     next()
 })
 
+
+userSchema.set("toJSON", {
+    transform : (doc, ret) => {
+        delete ret.password
+
+        return ret
+    }
+})
+
+userSchema.index({ username: 1, email: 1 }, { unique: true });
 
 const userModel = mongoose.model("User", userSchema)
 
