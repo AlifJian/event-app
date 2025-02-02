@@ -64,6 +64,15 @@ export default {
     }
   },
   async login(req: Request, res: Response): Promise<void> {
+
+    /** 
+    #swagger.requestBody = {
+      required : true,
+      schema : {$ref : "#/components/schemas/LoginRequest"}
+    } 
+     
+    */
+
     const { identifier, password } = req.body as unknown as TLogin;
 
     try {
@@ -114,6 +123,15 @@ export default {
     }
   },
   async me(req: IRequestToken, res: Response) {
+
+    /**
+     
+      #swagger.security = [{
+        "bearerAuth" : []
+      }]
+     
+     */
+
     const userToken = req.user;
     try {
       const resultUser = await userModel.findById(userToken?.id);
